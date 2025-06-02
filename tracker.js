@@ -1,4 +1,3 @@
-<script>
 (function() {
     const ENDPOINT = "https://flea-saved-dory.ngrok-free.app/track"; // <-- your backend API
 
@@ -56,4 +55,3 @@
     }).catch((err) => console.error("Tracking failed", err));
 
 })();
-</script>
