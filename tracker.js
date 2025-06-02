@@ -1,6 +1,6 @@
 <script>
 (function() {
-    const ENDPOINT = " https://flea-saved-dory.ngrok-free.app/track"; // <-- your backend API
+    const ENDPOINT = "https://flea-saved-dory.ngrok-free.app/track"; // <-- your backend API
 
     function getCookie(name) {
         const value = `; ${document.cookie}`;
