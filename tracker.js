@@ -50,8 +50,6 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
-        console.log("Tracker script loaded.");
-        console.log("Tracker payload:", payload);
     }).catch((err) => console.error("Tracking failed", err));
 
 })();
