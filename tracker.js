@@ -38,6 +38,7 @@
 
     function getDeviceType() {
         const ua = navigator.userAgent;
+        console.log("Tracker script loaded.", ua);
         if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
         if (/Android/i.test(ua)) return "Android";
         if (/Windows NT/i.test(ua)) return "Windows";
