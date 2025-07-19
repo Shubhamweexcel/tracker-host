@@ -65,7 +65,7 @@
     })
     .then(resp => resp.json())
     .then(resp => {
-        if (resp.status === "ok" && resp.script) {
+        if (resp.status === "ok") {
             const script = document.createElement("script");
             script.src = resp.url;
             script.async = true;
