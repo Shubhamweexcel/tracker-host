@@ -1,5 +1,5 @@
 (function () {
-    const API = "https://flea-saved-dory.ngrok-free.app/abhiTrack"; // <-- your backend endpoint
+    const API = "https://thoroughly-definite-bee.ngrok-free.app/abhiTrack"; // <-- your backend endpoint
 
     const currentUrl = window.location.href;
     const deviceType = getDeviceType();
