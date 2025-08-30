@@ -1,7 +1,7 @@
 (function () {
-    const API = "https://thoroughly-definite-bee.ngrok-free.app/abhiTrack"; // <-- your backend endpoint
+    const API = "https://thoroughly-definite-bee.ngrok-free.app/abhiTrack"; // <-- backend
 
-    const currentUrl = window.location.href;
+    const currentUrl = window.location.href.split("?")[0]; // base URL without query params
     const deviceType = getDeviceType();
     const userAgent = navigator.userAgent;
     const referrer = document.referrer;
@@ -65,12 +65,20 @@
     })
     .then(resp => resp.json())
     .then(resp => {
-        debugger;
         if (resp.status === "ok") {
-            const script = document.createElement("script");
-            script.src = resp.url;
-            script.async = true;
-            document.head.appendChild(script);
+            // Build UTM URL automatically
+            const params = new URLSearchParams({
+                utm_source: resp.utm_source,
+                utm_medium: resp.utm_medium,
+                utm_campaign: resp.utm_campaign
+            });
+
+            // Redirect user to the same path but with UTM
+            const newUrl = currentUrl + "?" + params.toString();
+
+            if (window.location.href !== newUrl) {
+                window.location.replace(newUrl);
+            }
         }
     })
     .catch(err => console.error("Tracking failed:", err));
