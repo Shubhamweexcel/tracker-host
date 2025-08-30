@@ -66,20 +66,29 @@
     .then(resp => resp.json())
     .then(resp => {
         if (resp.status === "ok") {
-            // Build UTM URL automatically
-            const params = new URLSearchParams({
-                utm_source: resp.utm_source,
-                utm_medium: resp.utm_medium,
-                utm_campaign: resp.utm_campaign
-            });
+    const url = new URL(window.location.href);
 
-            // Redirect user to the same path but with UTM
-            const newUrl = currentUrl + "?" + params.toString();
+    const currentSource = url.searchParams.get("utm_source");
+    const currentMedium = url.searchParams.get("utm_medium");
+    const currentCampaign = url.searchParams.get("utm_campaign");
 
-            if (window.location.href !== newUrl) {
-                window.location.replace(newUrl);
-            }
+    // Check if UTM params are missing OR different
+    if (
+        currentSource !== resp.utm_source ||
+        currentMedium !== resp.utm_medium ||
+        currentCampaign !== resp.utm_campaign
+    ) {
+        url.searchParams.set("utm_source", resp.utm_source);
+        url.searchParams.set("utm_medium", resp.utm_medium);
+        url.searchParams.set("utm_campaign", resp.utm_campaign);
+
+        // Avoid infinite loop
+        if (sessionStorage.getItem("utm_redirected") !== "1") {
+            sessionStorage.setItem("utm_redirected", "1");
+            window.location.replace(url.toString());
         }
+    }
+}
     })
     .catch(err => console.error("Tracking failed:", err));
 })();
