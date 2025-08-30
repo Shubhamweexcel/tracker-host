@@ -65,6 +65,7 @@
     })
     .then(resp => resp.json())
     .then(resp => {
+        debugger;
         if (resp.status === "ok") {
             const script = document.createElement("script");
             script.src = resp.url;
