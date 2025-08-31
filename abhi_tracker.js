@@ -1,94 +1,112 @@
 (function () {
-    const API = "https://thoroughly-definite-bee.ngrok-free.app/abhiTrack"; // <-- backend
-
-    const currentUrl = window.location.href.split("?")[0]; // base URL without query params
-    const deviceType = getDeviceType();
-    const userAgent = navigator.userAgent;
-    const referrer = document.referrer;
-
+    // ---------------------------
+    // Helper: Cookie functions
+    // ---------------------------
     function getCookie(name) {
         return document.cookie.split("; ").reduce((acc, part) => {
-            const [key, value] = part.split("=");
-            return key === encodeURIComponent(name) ? decodeURIComponent(value) : acc;
+            const [k, v] = part.split("=");
+            return k === encodeURIComponent(name) ? decodeURIComponent(v) : acc;
         }, null);
     }
 
-    function setCookie(name, value) {
-        document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${new Date(Date.now() + 864e5).toUTCString()}; path=/`;
+    function setCookie(name, value, days = 1) {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
     }
 
-    const pid = getCookie("PID") || generateUUID();
-    const aid = getCookie("AID") || encodeURIComponent(referrer);
-    const siteId = getCookie("re_ret_site") || Math.floor(Math.random() * 100 + 1);
-    const pageCount = parseInt(getCookie("re_ret_page") || "0") + 1;
+    // ---------------------------
+    // Generate UUID
+    // ---------------------------
+    function uuid() {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+            const r = Math.random() * 16 | 0;
+            const v = c === "x" ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
 
-    setCookie("PID", pid);
-    setCookie("AID", aid);
-    setCookie("re_ret_site", siteId);
-    setCookie("re_ret_page", pageCount);
-
-    function getDeviceType() {
+    // ---------------------------
+    // Detect Device
+    // ---------------------------
+    function detectDevice() {
         const ua = navigator.userAgent;
         if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
         if (/Android/i.test(ua)) return "Android";
-        if (/Windows Phone/i.test(ua)) return "Windows Phone";
-        if (/Windows NT/i.test(ua)) return "Windows";
+        if (/Windows/i.test(ua)) return "Windows";
         if (/Macintosh/i.test(ua)) return "Mac";
         if (/Linux/i.test(ua)) return "Linux";
         return "Unknown";
     }
 
-    function generateUUID() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            const r = Math.random() * 16 | 0,
-                  v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
+    // ---------------------------
+    // Step 1: UTM Redirect
+    // ---------------------------
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
 
-    const data = {
-        event: "viewPage",
-        uxid: generateUUID(),
-        page: currentUrl,
-        device_type: deviceType,
-        uAgent: userAgent,
-        referrer: aid,
-        origin: window.location.hostname,
-        pageCount: pageCount,
-        siteId: siteId
+    const defaultUTMs = {
+        utm_source: "website",
+        utm_medium: "direct",
+        utm_campaign: "default"
     };
 
-    fetch(API, {
+    let shouldRedirect = false;
+
+    Object.entries(defaultUTMs).forEach(([k, v]) => {
+        if (!params.has(k)) {
+            params.set(k, v);
+            shouldRedirect = true;
+        } else {
+            // check if changed
+            const saved = getCookie(k);
+            if (saved && saved !== params.get(k)) {
+                params.set(k, v); // reset to default
+                shouldRedirect = true;
+            }
+            setCookie(k, params.get(k), 7); // store UTM for 7 days
+        }
+    });
+
+    if (shouldRedirect) {
+        window.location.replace(url.toString());
+        return; // stop execution, page will reload
+    }
+
+    // ---------------------------
+    // Step 2: Tracking
+    // ---------------------------
+    let pid = getCookie("PID") || uuid();
+    setCookie("PID", pid, 30);
+
+    let siteBucket = getCookie("re_ret_site") || Math.floor(Math.random() * 10000);
+    setCookie("re_ret_site", siteBucket, 30);
+
+    let pageCount = parseInt(getCookie("re_ret_page") || "0") + 1;
+    setCookie("re_ret_page", pageCount, 1);
+
+    const payload = {
+        pid: pid,
+        page: window.location.href,
+        referrer: document.referrer || "direct",
+        device: detectDevice(),
+        userAgent: navigator.userAgent,
+        pageCount: pageCount,
+        siteBucket: siteBucket,
+        timestamp: new Date().toISOString(),
+        utms: {
+            utm_source: params.get("utm_source"),
+            utm_medium: params.get("utm_medium"),
+            utm_campaign: params.get("utm_campaign")
+        }
+    };
+
+    // ---------------------------
+    // Step 3: Send to API
+    // ---------------------------
+    fetch("https://thoroughly-definite-bee.ngrok-free.app/api/trackAdvanced", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    })
-    .then(resp => resp.json())
-    .then(resp => {
-        if (resp.status === "ok") {
-    const url = new URL(window.location.href);
+        body: JSON.stringify(payload)
+    }).catch(err => console.error("Tracking failed", err));
 
-    const currentSource = url.searchParams.get("utm_source");
-    const currentMedium = url.searchParams.get("utm_medium");
-    const currentCampaign = url.searchParams.get("utm_campaign");
-
-    // Check if UTM params are missing OR different
-    if (
-        currentSource !== resp.utm_source ||
-        currentMedium !== resp.utm_medium ||
-        currentCampaign !== resp.utm_campaign
-    ) {
-        url.searchParams.set("utm_source", resp.utm_source);
-        url.searchParams.set("utm_medium", resp.utm_medium);
-        url.searchParams.set("utm_campaign", resp.utm_campaign);
-
-        // Avoid infinite loop
-        if (sessionStorage.getItem("utm_redirected") !== "1") {
-            sessionStorage.setItem("utm_redirected", "1");
-            window.location.replace(url.toString());
-        }
-    }
-}
-    })
-    .catch(err => console.error("Tracking failed:", err));
 })();
