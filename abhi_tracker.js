@@ -104,9 +104,13 @@
     // Step 3: Send to API
     // ---------------------------
     fetch("https://thoroughly-definite-bee.ngrok-free.app/api/trackAdvanced", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    }).catch(err => console.error("Tracking failed", err));
-
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+    })
+    .then(res => res.json())   // parse JSON response
+    .then(data => {
+        console.log("Tracking response:", data);
+    })
+    .catch(err => console.error("Tracking failed", err));
 })();
