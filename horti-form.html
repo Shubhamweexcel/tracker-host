@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department of Horticulture, Government of Punjab</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gurmukhi:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Noto Sans Gurmukhi', sans-serif;
+            background-color: #f4f6f4;
+            color: #333;
+            padding-bottom: 50px;
+        }
+
+        /* Top Green Header Bar */
+        .main-header {
+            background-color: #005f62; /* Government Standard Green */
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            padding: 15px 4%;
+            gap: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .header-logo {
+            height: 90px;
+            width: auto;
+            background: #fff;
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .header-title h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            line-height: 24px;
+        }
+
+        .header-title p {
+            font-size: 18px;
+            font-weight: 500;
+            font-family: 'Noto Sans Gurmukhi', sans-serif;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        /* Form Container Wrapper */
+        .form-container {
+            max-width: 92%;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Section Block Panel Styling */
+        .section-panel {
+            background-color: #ffffff;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        /* Green Title Headers for each Section */
+        .section-header {
+            background-color: #005f62;
+            color: #ffffff;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', 'Noto Sans Gurmukhi', sans-serif;
+        }
+
+        /* Grid Content inside Sections */
+        .section-body {
+            padding: 25px 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 column layout */
+            gap: 20px;
+        }
+
+        /* Full Width for Textarea or wide inputs */
+        .full-width {
+            grid-column: span 3;
+        }
+
+        /* Form Input Field Container */
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f2f0; /* Light grey/green background */
+            border-radius: 4px;
+            padding: 8px 14px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s ease;
+        }
+
+        .input-box:focus-within {
+            background-color: #ffffff;
+            border-color: #005f62;
+            box-shadow: 0 0 5px rgba(0, 104, 55, 0.15);
+        }
+
+        /* Disabled Styling for Filled Fields */
+        .input-box.disabled-field {
+            background-color: #e4e8e4;
+            cursor: not-allowed;
+            opacity: 0.85;
+        }
+
+        .input-box.disabled-field input {
+            cursor: not-allowed;
+            color: #555555;
+        }
+
+        .input-box label {
+            font-size: 12px;
+            color: #555555;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .input-box input, .input-box select, .input-box textarea {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #111111;
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .input-box textarea {
+            resize: vertical;
+            height: 25px;
+        }
+
+        /* Footer & Actions Section */
+        .form-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 10px;
+            padding: 0 10px;
+        }
+
+        .btn-register {
+            background-color: #005f62;
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-family: 'Poppins', 'Noto Sans Gurmukhi', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .btn-register:hover {
+            background-color: #2e7d32;
+        }
+
+        /* --- POPUP MODAL STYLING --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-box h2 {
+            font-family: 'Noto Sans Gurmukhi', sans-serif;
+            font-size: 20px;
+            color: #333333;
+            margin-top: 20px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .btn-close-popup {
+            margin-top: 25px;
+            background-color: #005f62;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-close-popup:hover {
+            background-color: #143617;
+        }
+
+        /* --- ANIMATED LOOPING CHECKMARK CSS --- */
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+        
+        .success-checkmark .check-icon {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border-radius: 50%;
+            box-sizing: content-box;
+            border: 4px solid #4CAF50;
+        }
+        
+        /* White block masks to simulate drawing line */
+        .success-checkmark .check-icon::before, 
+        .success-checkmark .check-icon::after {
+            content: '';
+            height: 100px;
+            position: absolute;
+         /* background: #ffffff; */
+            transform: rotate(-45deg);
+        }
+        
+        .success-checkmark .check-icon::before {
+            top: 3px;
+            left: -2px;
+            width: 30px;
+            transform-origin: 100% 50%;
+            border-radius: 100px 0 0 100px;
+        }
+        
+        .success-checkmark .check-icon::after {
+            top: 0;
+            left: 30px;
+            width: 60px;
+            transform-origin: 0 50%;
+            border-radius: 0 100px 100px 0;
+            /* Infinite Loop for circle overlay mask */
+            animation: rotateCircle 2.5s ease-in-out infinite;
+        }
+        
+        .success-checkmark .check-icon .icon-line {
+            height: 5px;
+            background-color: #4CAF50;
+            display: block;
+            border-radius: 2px;
+            position: absolute;
+            z-index: 10;
+        }
+        
+        .success-checkmark .check-icon .icon-line.line-tip {
+            top: 46px;
+            left: 14px;
+            width: 25px;
+            transform: rotate(45deg);
+            /* Infinite Loop for tip line */
+            animation: icon-line-tip 2.5s ease-in-out infinite;
+        }
+        
+        .success-checkmark .check-icon .icon-line.line-long {
+            top: 38px;
+            right: 8px;
+            width: 47px;
+            transform: rotate(-45deg);
+            /* Infinite Loop for long line */
+            animation: icon-line-long 2.5s ease-in-out infinite;
+        }
+        
+        .success-checkmark .check-icon .icon-circle {
+            top: -4px;
+            left: -4px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid rgba(76, 175, 80, 0.5);
+            box-sizing: content-box;
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .success-checkmark .check-icon .icon-fix {
+            top: 8px;
+            left: 28px;
+            width: 5px;
+            height: 85px;
+            background-color: #ffffff;
+            position: absolute;
+            z-index: 1;
+            transform: rotate(-45deg);
+        }
+
+        /* Animations Keyframes with Infinite Loop Support */
+        @keyframes rotateCircle {
+            0% { transform: rotate(-45deg); }
+            5% { transform: rotate(-45deg); }
+            30% { transform: rotate(-45deg); }
+            65% { transform: rotate(-305deg); }
+            100% { transform: rotate(-305deg); }
+        }
+
+        @keyframes icon-line-tip {
+            0% { width: 0; left: 1px; top: 19px; }
+            30% { width: 0; left: 1px; top: 19px; }
+            45% { width: 25px; left: 14px; top: 46px; }
+            85% { width: 25px; left: 14px; top: 46px; opacity: 1; }
+            95% { opacity: 0; }
+            100% { width: 0; opacity: 0; }
+        }
+
+        @keyframes icon-line-long {
+            0% { width: 0; right: 46px; top: 54px; }
+            40% { width: 0; right: 46px; top: 54px; }
+            60% { width: 47px; right: 8px; top: 38px; }
+            85% { width: 47px; right: 8px; top: 38px; opacity: 1; }
+            95% { opacity: 0; }
+            100% { width: 0; opacity: 0; }
+        }
+
+        /* Responsive Settings */
+        @media (max-width: 992px) {
+            .section-body { grid-template-columns: repeat(2, 1fr); }
+            .full-width { grid-column: span 2; }
+        }
+        @media (max-width: 768px) {
+            .main-header { flex-direction: column; text-align: center; }
+            .section-body { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .form-footer { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-header">
+        <img src="logo.png" alt="Logo" class="header-logo">
+        <div class="header-title">
+            <h1>Department of Horticulture,<br>Government of Punjab</h1>
+            <span>ਬਾਗਬਾਨੀ ਵਿਭਾਗ, ਪੰਜਾਬ ਸਰਕਾਰ</span>
+        </div>
+    </div>
+
+    <form class="form-container" id="farmerForm" action="#" method="POST">
+
+        <div class="section-panel">
+            <div class="section-header">Basic Details (ਨਿੱਜੀ ਵੇਰਵੇ)</div>
+            <div class="section-body">
+                <div class="input-box disabled-field">
+                    <label>Full Name (ਕਿਸਾਨ ਦਾ ਪੂਰਾ ਨਾਮ) *</label>
+                    <input type="text" name="full_name" value="MANDEEP SARMAL" readonly tabindex="-1">
+                </div>
+                <div class="input-box disabled-field">
+                    <label>Mobile Number (ਮੋਬਾਈਲ ਨੰਬਰ) *</label>
+                    <input type="tel" name="mobile_number" value="9577500069" readonly tabindex="-1">
+                </div>
+                <div class="input-box">
+                    <label>Father Name *</label>
+                    <input type="text" name="father_name" placeholder="Enter your father name">
+                </div>
+                <div class="input-box disabled-field">
+                    <label>Govt. ID Number (PAN Card / Voter ID) *</label>
+                    <input type="text" name="govt_id" value="ABCDE1234F" readonly tabindex="-1">
+                </div>
+                <div class="input-box">
+                    <label>Full Address (ਪੂਰਾ ਪਤਾ) *</label>
+                    <textarea name="full_address" placeholder="Enter complete home/farm address"></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-panel" style="padding-bottom: 60px;">
+            <div class="section-header">Land Details (ਜ਼ਮੀਨ ਦੇ ਵੇਰਵੇ - ਲਾਜਮੀ )</div>
+            <div class="section-body">
+                <div class="input-box">
+                    <label>District (ਜ਼ਿਲ੍ਹਾ) *</label>
+                    <select name="district">
+                        <option value="" disabled selected>Select District *</option>
+                        <option value="block1">District 1</option>
+                        <option value="block2">District 2</option>
+                        <option value="block3">District 3</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>Tehsil (ਤਹਿਸੀਲ) *</label>
+                    <select name="tehsil">
+                        <option value="" disabled selected>Select Tehsil *</option>
+                        <option value="block1">Tehsil 1</option>
+                        <option value="block2">Tehsil 2</option>
+                        <option value="block3">Tehsil 3</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>Block (ਬਲਾਕ) *</label>
+                    <select name="block">
+                        <option value="" disabled selected>Select Block *</option>
+                        <option value="block1">Block 1</option>
+                        <option value="block2">Block 2</option>
+                        <option value="block3">Block 3</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>City / Village (ਪਿੰਡ/ਸ਼ਹਿਰ) *</label>
+                    <select name="village">
+                        <option value="" disabled selected>Select Village *</option>
+                        <option value="block1">Village 1</option>
+                        <option value="block2">Village 2</option>
+                        <option value="block3">Village 3</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>Total Farm Area (ਕੁੱਲ ਖੇਤੀਬਾੜੀ ਰਕਬਾ - Acres) *</label>
+                    <input type="number" step="0.1" name="total_area" placeholder="e.g. 15.5">
+                </div>
+            </div>
+            <button type="button" class="btn-register" style="position: absolute; right: 20px; bottom: 20px;">
+                Add (ਜਮਾਂ ਕਰੋ )
+            </button>
+        </div>
+
+        <div class="section-panel">
+            <div class="section-header">Farming & Potato Cultivation Details (ਖੇਤੀਬਾੜੀ ਅਤੇ ਆਲੂ ਦੀ ਖੇਤੀ ਦੇ ਵੇਰਵੇ - ਗੈਰਲਾਜਮੀ)</div>
+            <div class="section-body">
+                <div class="input-box">
+                    <label>Area Under Potato Cultivation (ਆਲੂ ਦੀ ਖੇਤੀ ਹੇਠ ਰਕਬਾ) *</label>
+                    <input type="number" step="0.1" name="potato_area" placeholder="e.g. 5.0">
+                </div>
+                <div class="input-box">
+                    <label>Potato Variety Grown (ਆਲੂ ਦੀ ਕਿਸਮ) *</label>
+                    <input type="text" name="potato_variety" placeholder="e.g. Kufri Pukhraj">
+                </div>
+                <div class="input-box">
+                    <label>Sowing Month / Date (ਬਿਜਾਈ ਦਾ ਮਹੀਨਾ / ਮਿਤੀ) *</label>
+                    <input type="text" name="sowing_time" placeholder="e.g. October / 15-10-2025">
+                </div>
+                <div class="input-box">
+                    <label>Expected Yield (ਸੰਭਾਵਿਤ ਝਾੜ - Quintals) *</label>
+                    <input type="number" name="expected_yield" placeholder="e.g. 250">
+                </div>
+                <div class="input-box">
+                    <label>Farming Method (ਖੇਤੀ ਦਾ ਤਰੀਕਾ) *</label>
+                    <select name="farming_method">
+                        <option value="" disabled selected>Select Method</option>
+                        <option value="traditional">Traditional (ਪਾਰੰਪਰਿਕ)</option>
+                        <option value="organic">Organic (ਜੈਵਿਕ)</option>
+                        <option value="mechanized">Fully Mechanized (ਮਸ਼ੀਨੀਕ੍ਰਿਤ)</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>Irrigation Source (ਸਿੰਚਾਈ ਦਾ ਸਾਧਨ) *</label>
+                    <select name="irrigation_source">
+                        <option value="" disabled selected>Select Source</option>
+                        <option value="tubewell">Tube Well (ਟਿਊਬਵੈੱਲ)</option>
+                        <option value="canal">Canal (ਨਹਿਰ)</option>
+                        <option value="drip">Drip Irrigation (ਤੁਪਕਾ ਪ੍ਰਣਾਲੀ)</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>Cold Storage Availability (ਕੋਲਡ ਸਟੋਰੇਜ ਦੀ ਉਪਲਬਧਤਾ) *</label>
+                    <select name="cold_storage">
+                        <option value="" disabled selected>Select Option</option>
+                        <option value="yes">Yes (ਹਾਂ)</option>
+                        <option value="no">No (ਨਾ)</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>Previous Year's Buyer (ਪਿਛਲੇ ਸਾਲ ਦਾ ਖਰੀਦਦਾਰ)</label>
+                    <select name="previous_buyer">
+                        <option value="" disabled selected>Select Option</option>
+                        <option value="local">Local Market</option>
+                        <option value="merchant">Merchant Name</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" class="btn-register">
+                 Register (ਰਜਿਸਟਰ)
+            </button>
+        </div>
+    </form>
+
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-box">
+            <div class="success-checkmark">
+                <div class="check-icon">
+                    <span class="icon-line line-tip"></span>
+                    <span class="icon-line line-long"></span>
+                    <div class="icon-circle"></div>
+                    <div class="icon-fix"></div>
+                </div>
+            </div>
+            <h2>ਤੁਹਾਡੇ ਵੇਰਵੇ ਸਫਲਤਾਪੂਰਵਕ ਜਮ੍ਹਾਂ ਹੋ ਗਏ ਹਨ।</h2>
+            <button class="btn-close-popup" onclick="closePopup()">ਠੀਕ ਹੈ</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('farmerForm');
+        const modal = document.getElementById('successModal');
+        
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            modal.classList.add('active');
+        });
+        
+        function closePopup() {
+            modal.classList.remove('active');
+        }
+    </script>
+
+</body>
+</html>

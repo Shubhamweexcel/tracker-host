@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department of Horticulture, Government of Punjab</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gurmukhi:wght@400;500;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background-color: #fcfbf7;
+        }
+
+        /* Container with Full Background Image */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            background: url('bg--01.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 6%;
+        }
+
+        /* Strong White Radial & Linear Fade from Top-Left */
+        .hero-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at -13% -83%, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.98) 36%, rgba(255, 255, 255, 0) 52%);
+            z-index: 1;
+        }
+        .hero-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 48%, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.98) 13%, rgba(255, 255, 255, 0) 30%);
+            z-index: 1;
+        }
+
+        /* Header / Logo Styling */
+        header {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            height: 100px;
+            width: auto;
+        }
+
+        .logo-text h1 {
+            font-size: 26px;
+            color: #1e3f20;
+            font-weight: 600;
+            letter-spacing: 1px;
+            line-height: 1.1;
+            padding-bottom: 3px;
+        }
+
+        .logo-text span {
+            font-size: 20px;
+            color: #4b6b44;
+            font-weight: 600;
+            letter-spacing: 2px;
+            display: block;
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: auto;
+            margin-bottom: auto;
+            gap: 40px;
+        }
+
+        /* Left Side Text Content */
+        .text-section {
+            max-width: 50%;
+            text-shadow: 3px 1px 40px #fff, 3px 1px 15px #fff, 3px 1px 50px #fff, 3px 1px 25px #fff, 3px 1px 40px #fff, 3px 1px 15px #fff, 3px 1px 50px #fff, 3px 1px 25px #fff, 3px 1px 40px #fff, 3px 1px 15px #fff, 3px 1px 50px #fff, 3px 1px 25px #fff, 3px 1px 40px #fff, 3px 1px 15px #fff, 3px 1px 50px #fff;
+        }
+
+        .punjabi-title {
+			font-family: 'Noto Sans Gurmukhi', sans-serif;
+			font-size: 2.8rem;
+			color: #143617;
+			font-weight: 700;
+			margin-bottom: 5px;
+			letter-spacing: -0.5px;
+		}
+
+        .english-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            color: #143617;
+            font-weight: 600;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .sub-text {
+    font-family: 'Noto Sans Gurmukhi', sans-serif;
+    font-size: 1.4rem;
+    color: #3b5a3e;
+    font-weight: 500;
+    letter-spacing: 2px;
+}
+
+        /* Right Side Verification Form Box */
+        .form-box {
+			background: rgb(255 255 255 / 16%);
+			padding: 35px;
+			border-radius: 20px;
+			backdrop-filter: blur(5px);
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			max-width: 420px;
+			width: 100%;
+			border: 1px solid #ffffff26;
+		}
+
+        .form-title {
+            font-size: 1.3rem;
+            color: #143617;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid #c3d1c5;
+            border-radius: 30px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            color: #143617;
+            background-color: #fafbfa;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #466933;
+            background-color: #ffffff;
+            box-shadow: 0 0 8px rgba(70, 105, 51, 0.15);
+        }
+
+        .btn-submit {
+			background-color: #005f62;
+			color: #ffffff;
+			border: none;
+			text-align: center;
+			padding: 15px;
+			border-radius: 30px;
+			font-size: 14px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			cursor: pointer;
+			transition: background-color 0.3s, transform 0.1s;
+			box-shadow: 0 4px 12px rgba(70, 105, 51, 0.2);
+			margin-top: 5px;
+			text-decoration: none;
+		}
+
+        .btn-submit:hover {
+            background-color: #143617;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1200px) {
+            .punjabi-title { font-size: 2.8rem; }
+            .english-title { font-size: 2.4rem; }
+        }
+
+        @media (max-width: 992px) {
+            .hero-container::before {
+                background: linear-gradient(to bottom, rgba(255,255,255,0.98) 40%, rgba(255,255,255,0.7) 70%, rgba(255,255,255,0.2) 100%);
+            }
+            .main-content {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 40px;
+            }
+            .text-section {
+                max-width: 100%;
+            }
+            .form-box {
+                max-width: 100%;
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-container { padding: 25px 4%; }
+            .punjabi-title { font-size: 2.2rem; }
+            .english-title { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-container">
+        <header>
+            <img src="logo.png" alt="Logo" class="logo-img">
+            <div class="logo-text">
+                <h1>Department of Horticulture,<br>Government of Punjab</h1>
+                <span>ਬਾਗਬਾਨੀ ਵਿਭਾਗ, ਪੰਜਾਬ ਸਰਕਾਰ</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="text-section">
+                <h1 class="punjabi-title">ਆਲੂ ਉਤਪਾਦਕ ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਫਾਰਮ</h1>
+                <h2 class="english-title">Potato Grower <br>Registration Form.</h2>
+                <p class="sub-text">Cultivating prosperity through horticulture</p>
+            </div>
+
+            <form class="form-box" action="#" method="POST">
+                <!-- <h3 class="form-title">Verification</h3> -->
+                
+                <div class="input-group">
+                    <label for="aadhaar">Enter Aadhaar Card/ Mobile Number</label>
+                    <input type="text" id="aadhaar" name="aadhaar_number" placeholder="XXXX XXXX XXXX" maxlength="12" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="otp">Enter OTP</label>
+                    <input type="password" id="otp" name="otp_code" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                </div>
+
+                <a href="horti-form.html" class="btn-submit">Submit</a>
+            </form>
+        </div>
+
+        <div></div>
+    </div>
+
+</body>
+</html>
