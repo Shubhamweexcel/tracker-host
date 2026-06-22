@@ -105,13 +105,13 @@
         }
 
         .punjabi-title {
-			font-family: 'Noto Sans Gurmukhi', sans-serif;
-			font-size: 2.8rem;
-			color: #143617;
-			font-weight: 700;
-			margin-bottom: 5px;
-			letter-spacing: -0.5px;
-		}
+            font-family: 'Noto Sans Gurmukhi', sans-serif;
+            font-size: 2.8rem;
+            color: #143617;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
 
         .english-title {
             font-family: 'Poppins', sans-serif;
@@ -125,34 +125,66 @@
         }
 
         .sub-text {
-    font-family: 'Noto Sans Gurmukhi', sans-serif;
-    font-size: 1.4rem;
-    color: #3b5a3e;
-    font-weight: 500;
-    letter-spacing: 2px;
-}
+            font-family: 'Noto Sans Gurmukhi', sans-serif;
+            font-size: 1.4rem;
+            color: #3b5a3e;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
 
         /* Right Side Verification Form Box */
         .form-box {
-			background: rgb(255 255 255 / 16%);
-			padding: 35px;
-			border-radius: 20px;
-			backdrop-filter: blur(5px);
-			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-			display: flex;
-			flex-direction: column;
-			gap: 20px;
-			max-width: 420px;
-			width: 100%;
-			border: 1px solid #ffffff26;
-		}
+            background: rgb(255 255 255 / 16%);
+            padding: 30px 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid #ffffff26;
+        }
 
-        .form-title {
-            font-size: 1.3rem;
-            color: #143617;
-            font-weight: 600;
+        /* Tabs Styling */
+        .tab-container {
+            display: flex;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 30px;
+            padding: 4px;
             margin-bottom: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
             text-align: center;
+        }
+
+        .tab-btn.active {
+            background: #005f62;
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 95, 98, 0.2);
+        }
+
+        /* Form Content Switch */
+        .form-content {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-content.active {
+            display: flex;
         }
 
         .input-group {
@@ -189,22 +221,22 @@
         }
 
         .btn-submit {
-			background-color: #005f62;
-			color: #ffffff;
-			border: none;
-			text-align: center;
-			padding: 15px;
-			border-radius: 30px;
-			font-size: 14px;
-			font-weight: 600;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-			cursor: pointer;
-			transition: background-color 0.3s, transform 0.1s;
-			box-shadow: 0 4px 12px rgba(70, 105, 51, 0.2);
-			margin-top: 5px;
-			text-decoration: none;
-		}
+            background-color: #005f62;
+            color: #ffffff;
+            border: none;
+            text-align: center;
+            padding: 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(70, 105, 51, 0.2);
+            margin-top: 5px;
+            text-decoration: none;
+        }
 
         .btn-submit:hover {
             background-color: #143617;
@@ -242,6 +274,7 @@
             .hero-container { padding: 25px 4%; }
             .punjabi-title { font-size: 2.2rem; }
             .english-title { font-size: 1.8rem; }
+            .tab-btn { font-size: 11px; padding: 8px 10px; }
         }
     </style>
 </head>
@@ -263,25 +296,62 @@
                 <p class="sub-text">Cultivating prosperity through horticulture</p>
             </div>
 
-            <form class="form-box" action="#" method="POST">
-                <!-- <h3 class="form-title">Verification</h3> -->
-                
-                <div class="input-group">
-                    <label for="aadhaar">Enter Aadhaar Card/ Mobile Number</label>
-                    <input type="text" id="aadhaar" name="aadhaar_number" placeholder="XXXX XXXX XXXX" maxlength="12" required>
+            <div class="form-box">
+                <div class="tab-container">
+                    <button class="tab-btn active" onclick="switchTab('farmer-login')">Farmer Login</button>
+                    <button class="tab-btn" onclick="switchTab('cold-storage')">Potato Cold Storage</button>
                 </div>
 
-                <div class="input-group">
-                    <label for="otp">Enter OTP</label>
-                    <input type="password" id="otp" name="otp_code" placeholder="Enter 6-digit OTP" maxlength="6" required>
-                </div>
+                <form id="farmer-login" class="form-content active" action="#" method="POST">
+                    <div class="input-group">
+                        <label for="aadhaar">Enter Aadhaar Card/ Mobile Number</label>
+                        <input type="text" id="aadhaar" name="aadhaar_number" placeholder="XXXX XXXX XXXX" maxlength="12" required>
+                    </div>
 
-                <a href="horti-form.html" class="btn-submit">Submit</a>
-            </form>
+                    <div class="input-group">
+                        <label for="otp">Enter OTP</label>
+                        <input type="password" id="otp" name="otp_code" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                    </div>
+
+                    <a href="horti-form.html" class="btn-submit">Submit</a>
+                </form>
+
+                <form id="cold-storage" class="form-content" action="#" method="POST">
+                    <div class="input-group">
+                        <label for="mobile">Enter Mobile Number</label>
+                        <input type="tel" id="mobile" name="mobile_number" placeholder="Enter Mobile Number" maxlength="10" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="storage-otp">Enter OTP</label>
+                        <input type="password" id="storage-otp" name="otp_code" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                    </div>
+
+                    <a href="potato-cold-storage-form.html" class="btn-submit">Submit</a>
+                </form>
+            </div>
         </div>
 
         <div></div>
     </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.form-content').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active class to current tab and button
+            document.getElementById(tabId).classList.add('active');
+            
+            // Find the button that triggered the click and mark it active
+            event.currentTarget.classList.add('active');
+        }
+    </script>
 
 </body>
 </html>
