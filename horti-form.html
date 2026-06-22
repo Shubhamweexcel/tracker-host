@@ -467,10 +467,21 @@
         <div class="section-panel">
             <div class="section-header">Farming & Potato Cultivation Details (ਖੇਤੀਬਾੜੀ ਅਤੇ ਆਲੂ ਦੀ ਖੇਤੀ ਦੇ ਵੇਰਵੇ - ਗੈਰਲਾਜਮੀ)</div>
             <div class="section-body">
+			
                 <div class="input-box">
-                    <label>Area Under Potato Cultivation (ਆਲੂ ਦੀ ਖੇਤੀ ਹੇਠ ਰਕਬਾ) *</label>
+                    <label>Area Under Seed Production (ਬੀਜ ਉਤਪਾਦਨ ਅਧੀਨ ਖੇਤਰ) *</label>
                     <input type="number" step="0.1" name="potato_area" placeholder="e.g. 5.0">
                 </div>
+				<div class="input-box">
+                    <label>Area Under Ware Potato (ਆਲੂਆਂ ਦੇ ਵੇਅਰ ਹੇਠਲਾ ਖੇਤਰ) *</label>
+                    <input type="number" step="0.1" name="potato_area" placeholder="e.g. 5.0">
+                </div>
+				<div class="input-box">
+                    <label>Area Under Process Potato (ਆਲੂ ਦੀ ਪ੍ਰਕਿਰਿਆ ਅਧੀਨ ਖੇਤਰ) *</label>
+                    <input type="number" step="0.1" name="potato_area" placeholder="e.g. 5.0">
+                </div>
+				
+
                 <div class="input-box">
                     <label>Potato Variety Grown (ਆਲੂ ਦੀ ਕਿਸਮ) *</label>
                     <input type="text" name="potato_variety" placeholder="e.g. Kufri Pukhraj">
@@ -483,6 +494,16 @@
                     <label>Expected Yield (ਸੰਭਾਵਿਤ ਝਾੜ - Quintals) *</label>
                     <input type="number" name="expected_yield" placeholder="e.g. 250">
                 </div>
+				<div class="input-box">
+                    <label>Quantity to be Sold (ਵੇਚਣ ਵਾਲੀ ਮਾਤਰਾ) *</label>
+                    <input type="number" name="expected_yield" placeholder="e.g. 100">
+                </div>
+				<div class="input-box">
+                    <label>Quantity to be Store (ਸਟੋਰ ਕਰਨ ਲਈ ਮਾਤਰਾ) *</label>
+                    <input type="number" name="expected_yield" placeholder="e.g. 10">
+                </div>
+				
+
                 <div class="input-box">
                     <label>Farming Method (ਖੇਤੀ ਦਾ ਤਰੀਕਾ) *</label>
                     <select name="farming_method">
@@ -519,6 +540,46 @@
                 </div>
             </div>
         </div>
+		
+		
+		
+		 <div class="section-panel">
+            <div class="section-header">Last Year Potato Sold Details (ਪਿਛਲੇ ਸਾਲ ਆਲੂ ਦੀ ਵਿਕਰੀ ਦੇ ਵੇਰਵੇ)</div>
+            <div class="section-body">
+                <div class="input-box">
+                    <label>Quantity to be Sold (ਵੇਚਣ ਵਾਲੀ ਮਾਤਰਾ) *</label>
+                    <input type="number" step="0.1" name="potato_area" placeholder="e.g. 5.0">
+                </div>
+				<div class="input-box">
+                    <label>Quantity to be Stored (ਸਟੋਰ ਕਰਨ ਲਈ ਮਾਤਰਾ) *</label>
+                    <input type="number" step="0.1" name="potato_area" placeholder="e.g. 5.0">
+                </div>
+				<div class="input-box">
+                    <label>Sold Price (ਵਿਕਰੀ ਮੁੱਲ) *</label>
+                    <input type="number" step="0.1" name="potato_area" placeholder="e.g. 5.0">
+                </div>
+				<div class="input-box">
+                    <label>Stored Price (ਸਟੋਰ ਕੀਤੀ ਕੀਮਤ) *</label>
+                    <input type="number" step="0.1" name="potato_area" placeholder="e.g. 5.0">
+                </div>
+				<div class="input-box">
+                    <label>Previous Year's Buyer (ਪਿਛਲੇ ਸਾਲ ਦਾ ਖਰੀਦਦਾਰ)</label>
+                    <select name="previous_buyer">
+                        <option value="" disabled selected>Select Option</option>
+                        <option value="local">Local Market</option>
+                        <option value="merchant">Merchant Name</option>
+                    </select>
+                </div>
+				
+				
+            </div>
+        </div>
+		
+		
+		
+		
+		
+		
 
         <div class="form-footer">
             <button type="submit" class="btn-register">
