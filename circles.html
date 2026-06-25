@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Directory & Navigator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+        .search-container {
+            position: sticky;
+            top: 0;
+            background-color: #f4f6f9;
+            padding: 10px 0 20px 0;
+            z-index: 100;
+        }
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box:focus {
+            border-color: #3498db;
+        }
+        .warehouse-list {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .counter {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eef2f5;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #34495e;
+            font-weight: 600;
+            position: sticky;
+            top: 75px;
+            z-index: 10;
+        }
+        tr:hover {
+            background-color: #fdfdfd;
+        }
+        .map-btn {
+            background-color: #ff4a5a;
+            color: white;
+            padding: 8px 14px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            font-size: 14px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .map-btn:hover {
+            background-color: #e03241;
+        }
+        .badge {
+            background: #e8f4fd;
+            color: #3498db;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Warehouse Location Navigator</h1>
+    <div class="subtitle">Instant Navigation Dashboard — Preloaded with 6 Circle Dataset</div>
+    
+    <div class="search-container">
+        <input type="text" id="search-input" class="search-box" placeholder="🔍 Type to search by Warehouse Name, Circle, District, or Address...">
+    </div>
+
+    <div class="warehouse-list">
+        <div class="counter" id="record-count">Showing all locations</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Circle / District</th>
+                    <th>Warehouse Name</th>
+                    <th>Address</th>
+                    <th>Coordinates</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="warehouse-table-body">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Pre-filled dataset compiled directly from your "6 Circle" sheet
+        const warehouses = [
+            {"circle":"Ambala","district":"Ambala","name":"Ambala City","address":"Near Manji shahib Gurudwara, Ambala City","lat":30.37818,"lon":76.776695},
+            {"circle":"Ambala","district":"Ambala","name":"Naneola","address":"Village naneola","lat":30.280436,"lon":76.708867},
+            {"circle":"Ambala","district":"Ambala","name":"Shahzadpur","address":"Near Bus stand , Anaj Mandi, Shahzadpur","lat":30.446484,"lon":77.033943},
+            {"circle":"Ambala","district":"Ambala","name":"Nasirpur","address":"Near Shani Dev Mandir Hisar road Nasirpur, Ambala City","lat":30.352749,"lon":76.76075},
+            {"circle":"Ambala","district":"Ambala","name":"Mandhor","address":"Naraingarh Road, Mandhor","lat":30.408333,"lon":76.8458333},
+            {"circle":"Ambala","district":"Ambala","name":"Saha","address":"Jagadhari Road, Near Anaj Mandi, Saha","lat":30.30052,"lon":76.968613},
+            {"circle":"Ambala","district":"Ambala","name":"Mullana","address":"Jagadhari Road, Near Bus stand, Mullana","lat":30.2752852,"lon":77.04758},
+            {"circle":"Ambala","district":"Yamuna Nagar","name":"Radaur","address":"Yamuna Nagar, Near Anaj Mandi, Radaur","lat":30.027164,"lon":77.15112},
+            {"circle":"Panipat","district":"Panipat","name":"SWH Panipat-I","address":"Industrial Area, Panipat","lat":29.403429,"lon":76.956621},
+            {"circle":"Panipat","district":"Panipat","name":"SWH Panipat-II","address":"New Grain Market Panipat","lat":29.364727,"lon":76.969415},
+            {"circle":"Panipat","district":"Panipat","name":"SWH Madlauda","address":"Village Madlauda","lat":29.405958,"lon":76.813902},
+            {"circle":"Panipat","district":"Panipat","name":"SWH Samalkha","address":"Sita Ram Colony Samalkha","lat":29.232338,"lon":77.014483},
+            {"circle":"Panipat","district":"Panipat","name":"SWH Israna","address":"Near Government collage Israna","lat":29.278418,"lon":76.840573},
+            {"circle":"Panipat","district":"Panipat","name":"SWH Chhichhrana","address":"Village Chhichrana","lat":29.303178,"lon":76.695038},
+            {"circle":"Panipat","district":"Panipat","name":"SWH Bapoli","address":"Village Bapoli","lat":29.344211,"lon":77.082343},
+            {"circle":"Panipat","district":"Karnal","name":"SWH Gharaunda-I","address":"NH-44 GT Road, Near Liberty Gharaunda","lat":29.550828,"lon":76.973626},
+            {"circle":"Panipat","district":"Karnal","name":"SWH Gharaunda-II","address":"New Grain Market Gharaunda","lat":29.543000,"lon":76.974000}
+        ];
+
+        // Render data to the page immediately on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTable(warehouses);
+        });
+
+        // Search engine logic
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredData = warehouses.filter(item => {
+                return (
+                    item.name.toLowerCase().includes(searchTerm) ||
+                    item.address.toLowerCase().includes(searchTerm) ||
+                    item.district.toLowerCase().includes(searchTerm) ||
+                    item.circle.toLowerCase().includes(searchTerm)
+                );
+            });
+            renderTable(filteredData);
+        });
+
+        function renderTable(data) {
+            const tableBody = document.getElementById('warehouse-table-body');
+            const counter = document.getElementById('record-count');
+            tableBody.innerHTML = ''; 
+            
+            counter.textContent = `Found ${data.length} location(s)`;
+
+            if(data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#7f8c8d; padding: 30px;">No matching warehouses found.</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lon}`;
+
+                tr.innerHTML = `
+                    <td>
+                        <span class="badge">${item.circle}</span><br>
+                        <small style="color:#7f8c8d; font-weight:500;">${item.district}</small>
+                    </td>
+                    <td><strong>${item.name}</strong></td>
+                    <td><small style="color:#555;">${item.address}</small></td>
+                    <td><code style="font-size:12px; color:#7f8c8d;">${item.lat}, ${item.lon}</code></td>
+                    <td><a href="${googleMapsUrl}" target="_blank" class="map-btn">🗺️ Open Map</a></td>
+                `;
+                
+                tableBody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
