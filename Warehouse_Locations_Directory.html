@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ... existing code ... -->
     <title>Warehouse Locations Directory</title>
     <style>
         :root {
@@ -27,7 +23,7 @@
         }
         header {
             background-color: var(--card-bg);
-            padding: 1.5rem 2rem;
+            padding: 1rem 1.5rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
@@ -48,7 +44,7 @@
             }
         }
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
             color: var(--text-main);
         }
@@ -59,11 +55,11 @@
         }
         .search-container input {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
             border: 1px solid var(--border-color);
             border-radius: 9999px;
             outline: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: all 0.2s;
             background-color: var(--bg-color);
         }
@@ -80,180 +76,176 @@
             color: var(--text-muted);
         }
         .stats {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            margin-top: 0.5rem;
+            margin-top: 0.25rem;
         }
         main {
             max-width: 1200px;
-            margin: 2rem auto;
+            margin: 1.5rem auto;
             padding: 0 1rem;
         }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        .card {
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-color);
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            flex-direction: column;
+            border: 1px solid var(--border-color);
+            -webkit-overflow-scrolling: touch;
         }
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            min-width: 650px; /* Prevents squishing on narrow mobile screens */
         }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
+        th, td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        tbody tr {
+            transition: background-color 0.15s ease;
+        }
+        tbody tr:hover {
+            background-color: #f1f5f9;
         }
         .location-name {
-            font-size: 1.125rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--primary-color);
-            margin-bottom: 0.25rem;
+        }
+        .meta-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
         }
         .badge {
+            display: inline-block;
             background: #e0f2fe;
             color: #0369a1;
-            padding: 0.25rem 0.75rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 9999px;
             font-size: 0.75rem;
             font-weight: 600;
             white-space: nowrap;
         }
-        .info-row {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 0.75rem;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-        .info-label {
-            font-weight: 600;
-            width: 70px;
-            flex-shrink: 0;
-            color: var(--text-main);
-        }
-        .info-value {
-            flex-grow: 1;
-        }
-        .spacer {
-            flex-grow: 1;
-        }
         .nav-btn {
-            margin-top: 1.5rem;
-            width: 100%;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.3rem;
             transition: background-color 0.2s;
+            white-space: nowrap;
         }
         .nav-btn:hover {
             background-color: var(--primary-hover);
         }
         .nav-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
         }
         .no-results {
             text-align: center;
             padding: 3rem;
             color: var(--text-muted);
             font-size: 1.1rem;
-            grid-column: 1 / -1;
         }
     </style>
 </head>
-<body>
-
-    <header>
-        <div class="header-content">
-            <div>
-                <h1>Warehouse Locations Directory</h1>
-                <div class="stats" id="stats">Loading...</div>
-            </div>
-            <div class="search-container">
-                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" id="searchInput" placeholder="Search by name, district, or address...">
-            </div>
+<!-- ... existing code ... -->
         </div>
     </header>
 
     <main>
-        <div class="grid" id="cardGrid">
-            <!-- Cards will be populated here by JavaScript -->
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Location</th>
+                        <th>District / Circle</th>
+                        <th>Address</th>
+                        <th style="width: 120px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Rows will be populated here by JavaScript -->
+                </tbody>
+            </table>
+            <div id="noResults" class="no-results" style="display: none;">No locations found matching your search.</div>
         </div>
     </main>
 
     <script>
         // Load data injected from Python
-        const locations = [{"circle": "Ambala", "district": "Ambala", "type": "Warehouse", "name": "Ambala City", "address": "Near Manji shahib Gurudwara, Ambala City", "lat": 30.37818, "lng": 76.776695}, {"circle": "Ambala", "district": "Ambala", "type": "Warehouse", "name": "Naneola", "address": "Village naneola", "lat": 30.280436, "lng": 76.708867}, {"circle": "Ambala", "district": "Ambala", "type": "Warehouse", "name": "Shahzadpur", "address": "Near Bus stand , Anaj Mandi, Shahzadpur", "lat": 30.446484, "lng": 77.033943}, {"circle": "Ambala", "district": "Ambala", "type": "Warehouse", "name": "Nasirpur", "address": "Near Shani Dev Mandir Hisar road Nasirpur, Ambala City", "lat": 30.352749, "lng": 76.76075}, {"circle": "Ambala", "district": "Ambala", "type": "Warehouse", "name": "Mandhor", "address": "Naraingarh Road, Mandhor", "lat": 30.408333, "lng": 76.8458333}, {"circle": "Ambala", "district": "Ambala", "type": "Warehouse", "name": "Saha", "address": "Jagadhari Road, Near Anaj Mandi, Saha", "lat": 30.30052, "lng": 76.968613}, {"circle": "Ambala", "district": "Ambala", "type": "Warehouse", "name": "Mullana", "address": "Jagadhari Road, Near Bus stand, Mullana", "lat": 30.2752852, "lng": 77.04758}, {"circle": "Ambala", "district": "Yamuna Nagar", "type": "Warehouse", "name": "Radaur", "address": "Yamuna Nagar, Near Anaj Mandi, Radaur", "lat": 30.027164, "lng": 77.149292}, {"circle": "Ambala", "district": "Yamuna Nagar", "type": "Warehouse", "name": "Sadhaura", "address": "Dosarka Chwok,Sadhaura", "lat": 30.381904, "lng": 77.215176}, {"circle": "Ambala", "district": "Yamuna Nagar", "type": "Warehouse", "name": "Yamuna Nagar", "address": "Near Kaniya Chwok, Yamuna Nagar", "lat": 30.129, "lng": 77.2674}, {"circle": "Ambala", "district": "Yamuna Nagar", "type": "Warehouse", "name": "Jagadhari", "address": "Jagadhari", "lat": 30.166667, "lng": 77.333333}, {"circle": "Bhiwani", "district": "Bhiwani", "type": "Warehouse", "name": "SWH Bhiwani", "address": "kath mandi Bhiwani", "lat": 28.791004, "lng": 76.125984}, {"circle": "Bhiwani", "district": "Bhiwani", "type": "Warehouse", "name": "SWH Bawani khera", "address": "Tosham Road Bawani Khera", "lat": 28.936649, "lng": 76.037703}, {"circle": "Bhiwani", "district": "Charkhi Dadri", "type": "Warehouse", "name": "SWH Kohalwas", "address": "Kohalwas near Hafed complex", "lat": 28.685695, "lng": 76.304822}, {"circle": "Fatehabad", "district": "Hisar", "type": "Hired Pvt. Godown", "name": "Dhani Premnager Godown", "address": "Barwala Chandigargh Road, Dhani Premnagar", "lat": 29.410699, "lng": 75.920921}, {"circle": "Fatehabad", "district": "Hisar", "type": "Hired Pvt. Godown", "name": "Kaushalya Devi Godown", "address": "Barwala Hisar Road, Near Railway Bridge", "lat": 29.348509, "lng": 75.872016}, {"circle": "Fatehabad", "district": "Hisar", "type": "Hired Pvt. Godown", "name": "Dhansu", "address": "Dhansu", "lat": 29.211526, "lng": 75.788782}, {"circle": "Fatehabad", "district": "Hisar", "type": "Hired Pvt. Godown", "name": "Shree Developer", "address": "Dhandoor", "lat": 29.13426612, "lng": 75.393042}, {"circle": "Fatehabad", "district": "Hisar", "type": "HSAMB Warehouse", "name": "HSAMB Godown", "address": "Near Grain Market Barwala", "lat": 29.363663, "lng": 75.888154}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Pvt. Godown", "name": "Singla Godown", "address": "Near  Bus Stand Jakhal", "lat": 29.806504, "lng": 75.820746}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "Private Hired,Rattangarh", "address": "Budhlada Road, Rattangarh", "lat": 29.726392, "lng": 75.566348}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "Puspa Devi Godown,Ratia", "address": "Sardulgarh Road Ratia", "lat": 29.67106, "lng": 75.55683}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "Hwc Bhuna", "address": "Bhuna", "lat": 29.541898, "lng": 75.713035}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH Jakhal New Campus", "address": "Balarha Road, Jakhal", "lat": 29.805191, "lng": 75.831455}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH Jakhal Old  Campus", "address": "Balarha Road, Jakhal", "lat": 29.806398, "lng": 75.828507}, {"circle": "Fatehabad", "district": "Hisar", "type": "Warehouse", "name": "SWH Barwala New Campus", "address": "Near Govt. Collage Barwala", "lat": 29.365203, "lng": 75.899572}, {"circle": "Fatehabad", "district": "Hisar", "type": "Warehouse", "name": "SWH Barwala Old Campus", "address": "Near FCI Godown Barwala", "lat": 29.372545, "lng": 75.891122}, {"circle": "Fatehabad", "district": "HISAR", "type": "Warehouse", "name": "SWH DHANDOOR", "address": "SIRSA ROAD DHANDOOR HISAR", "lat": 29.218502, "lng": 75.67208}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH TOHANA-I                    (Mandi Campus)", "address": "Near Old Grain Market, Tohana", "lat": 29.723512, "lng": 75.90447}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH TOHANA-I                      ( FCI Gaurantee Godown)", "address": "Opposite Railway Station, Tohana", "lat": 29.72725, "lng": 75.9047}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH TOHANA-II", "address": "Opposite Railway Station, Tohana", "lat": 29.727722, "lng": 75.902763}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH OLD Campus", "address": "Bhattu Road", "lat": 29.508619, "lng": 75.445472}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH  New Campus", "address": "Mini By pass Sirsa Road", "lat": 29.511811, "lng": 75.41444}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH BHATTU Campus", "address": "FATEHABAD Road", "lat": 29.39304, "lng": 75.342368}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH III TOHANA", "address": "New Additional mandi jamalpur", "lat": 29.700043, "lng": 75.871638}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH-Dharsul", "address": "Dharsul", "lat": 29.676511, "lng": 75.7291}, {"circle": "Fatehabad", "district": "Hisar", "type": "Warehouse", "name": "SWH-Uklana", "address": "Uklana", "lat": 29.503124, "lng": 75.910291}, {"circle": "Fatehabad", "district": "Fatehabad", "type": "Warehouse", "name": "SWH BHATTU Campus", "address": "FATEHABAD Road", "lat": 29.39304, "lng": 75.342368}, {"circle": "Fatehabad", "district": "Hisar", "type": "Warehouse", "name": "Prem Nagar umra raod Hansi", "address": "Prem Nagar umra raod Hansi", "lat": 29.084152, "lng": 75.944279}, {"circle": "Fatehabad", "district": "Hisar", "type": "Warehouse", "name": "SWH OLD Campus Hansi", "address": "SWH OLD Campus Hansi", "lat": 29.10106, "lng": 75.97893}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Rania", "address": "Near Grain Market, Rania", "lat": 29.524297, "lng": 74.846505}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Dabwali", "address": "Near Grain Market, Dabwali", "lat": 29.95728, "lng": 74.692356}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Abubshehar", "address": "Near Grain Market, Abubshehar", "lat": 29.849966, "lng": 74.607486}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Bani", "address": "Near Grain Market, Bani", "lat": 29.601714, "lng": 74.621559}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Baragudha", "address": "Near Grain Market, Baragudha", "lat": 29.693029, "lng": 75.00309}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Ellenabad", "address": "Near FCI godowns, Ellenabad", "lat": 29.44933, "lng": 74.656372}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Sirsa", "address": "Old housing board colony, near Kapas mandi, Sirsa", "lat": 29.54776, "lng": 75.021129}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Kalanwali", "address": "Sardulgarh Road, near bridge, Kalanwali", "lat": 29.825083, "lng": 74.981667}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Jiwan Nager", "address": "Near Grain Markter, Jiwan Nager", "lat": 29.534787, "lng": 74.7459}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Chautala (Old campus)", "address": "Near Electricity board,Chautala", "lat": 29.786127, "lng": 74.527912}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Chautala (New campus)", "address": "Bharatmala Express way, Near Govt. ITI, Chautala", "lat": 29.791268, "lng": 74.531165}, {"circle": "Sirsa", "district": "Sirsa", "type": "Warehouse", "name": "SWH Rori", "address": "Opposite DHBVN Office, Dabwali road, Rori", "lat": 29.736889, "lng": 75.200472}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Safidon-I", "address": "Ratta Khera", "lat": 29.387275, "lng": 76.646879}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Safidon-II", "address": "Sila Kheri", "lat": 29.39154, "lng": 76.614406}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Alewa", "address": "Village Alewa", "lat": 29.465819, "lng": 76.456569}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Nagura", "address": "Village Nagura", "lat": 29.429233, "lng": 76.37067}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Dhamtan Sahib", "address": "Village Dhamtan Sahib", "lat": 29.691025, "lng": 76.01155948}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Dhanouri", "address": "Village Dhanouri", "lat": 29.7715752, "lng": 76.16815}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Jind-I", "address": "Old Hansi Road Jind", "lat": 29.30613, "lng": 76.308102}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Jind-II", "address": "Village Ahirka", "lat": 29.350922, "lng": 76.294129}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Uchana-I", "address": "Uchana", "lat": 29.47688, "lng": 76.18826}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Uchana-II", "address": "Additional Grain Market  Uchana", "lat": 29.453805, "lng": 76.193491}, {"circle": "Jind", "district": "JIND", "type": "Warehouse", "name": "SWH Julana", "address": "Julana", "lat": 29.130757, "lng": 76.401754}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Kaithal-I", "address": "Near Jakholi Adda, Kaithal", "lat": 29.789069, "lng": 76.399285}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Kaithal-II", "address": "Kutubpur road, Kaithal", "lat": 29.768853, "lng": 76.357245}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Kaithal-III", "address": "Near Parshuram chowk Kaithal", "lat": 29.8114213, "lng": 76.3904598}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Cheeka-I", "address": "Guhla road, Cheeka", "lat": 30.047004, "lng": 76.3272}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Cheeka-II", "address": "Badsui road, Cheeka", "lat": 30.058435, "lng": 76.351559}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Siwan", "address": "Near Bus Stand Siwan", "lat": 29.883024, "lng": 76.358581}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Pai", "address": "Near Anaj Mandi Pai.", "lat": 29.698087, "lng": 76.527453}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Pundri", "address": "Karnal road, Pundri City", "lat": 29.771316, "lng": 76.558912}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Jakholi", "address": "Kasan road VPO Jakholi", "lat": 29.657656, "lng": 76.424726}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Rajound", "address": "Bir Bangra road, Rajound", "lat": 29.568704, "lng": 76.495296}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Santokh Majra", "address": "VPO Santokh Majra", "lat": 29.60306, "lng": 76.476349}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Kaul", "address": "VPO Kaul", "lat": 29.851902, "lng": 76.652725}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Patti Choudhary", "address": "Near Extension Grain Market, Kaithal", "lat": 29.759348, "lng": 76.393077}, {"circle": "Kaithal", "district": "", "type": "Warehouse", "name": "SWH Kalayat", "address": "Near Grain Market Kalayat", "lat": 29.673832, "lng": 76.236857}, {"circle": "Kurukshetra", "district": "Kurukshetra", "type": "Warehouse", "name": "Pipli", "address": "Ladwa Road Pipli", "lat": 29.977119, "lng": 76.895066}, {"circle": "Kurukshetra", "district": "Kurukshetra", "type": "Warehouse", "name": "Kurukshetra-I", "address": "Gamri Road Kurukshetra", "lat": 29.964017, "lng": 76.848299}, {"circle": "Kurukshetra", "district": "Kurukshetra", "type": "Warehouse", "name": "Kurukshetra-II", "address": "New Grain Market Kurukshetra", "lat": 29.948425, "lng": 76.845476}, {"circle": "Kurukshetra", "district": "Kurukshetra", "type": "Warehouse", "name": "Pehowa", "address": "Near Post office Pehowa", "lat": 29.985903, "lng": 76.583341}, {"circle": "Kurukshetra", "district": "Kurukshetra", "type": "Warehouse", "name": "Ladwa", "address": "New New Grain Market Ladwa", "lat": 29.993023, "lng": 77.05286}, {"circle": "Kurukshetra", "district": "Kurukshetra", "type": "Warehouse", "name": "Shahabad", "address": "Barara Road Shahabad", "lat": 30.172859, "lng": 76.869137}, {"circle": "Kurukshetra", "district": "Kurukshetra", "type": "Warehouse", "name": "Ismailabad", "address": "Hisar Chandigarh Road Ismailabad", "lat": 30.11196, "lng": 76.667988}, {"circle": "Kurukshetra", "district": "Kurukshetra", "type": "Warehouse", "name": "Gumthala Garhu", "address": "Village Gumthala Garhu", "lat": 29.934856, "lng": 76.542151}, {"circle": "Palwal", "district": "Faridabad", "type": "Warehouse", "name": "Kheri Kalan", "address": "Faridabad", "lat": 28.39655, "lng": 77.26956}, {"circle": "Palwal", "district": "Faridabad", "type": "Warehouse", "name": "Kheri Kalan", "address": "Delhi Agra Road", "lat": 28.39655, "lng": 77.26956}, {"circle": "Palwal", "district": "Faridabad", "type": "Warehouse", "name": "Palwal-III", "address": "Village Ratipur", "lat": 28.1174, "lng": 77.2872}, {"circle": "Palwal", "district": "Faridabad", "type": "Warehouse", "name": "Palwal", "address": "Palwal", "lat": 28.143, "lng": 77.329}, {"circle": "Palwal", "district": "Faridabad", "type": "Private Warehouse", "name": "Khajurka", "address": "Village khajurka", "lat": 28.1487362, "lng": 77.3320262}, {"circle": "Palwal", "district": "Palwal", "type": "Private Warehouse", "name": "Khajurka", "address": "Village khajurka", "lat": 28.1487362, "lng": 77.3320262}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Palwal", "address": "Palwal", "lat": 28.143, "lng": 77.329}, {"circle": "Palwal", "district": "Palwal", "type": "Private Warehouse", "name": "Ghughera", "address": "Sohna Road", "lat": 28.148735, "lng": 77.332024}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Sugar fed", "address": "Near Police Line", "lat": 28.1487362, "lng": 77.3320262}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Hathin", "address": "Hathin", "lat": 28.152562, "lng": 77.339295}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Palwal-III", "address": "Village Ratipur", "lat": 28.1174, "lng": 77.2872}, {"circle": "Palwal", "district": "Palwal", "type": "Private Warehouse", "name": "Khajurka", "address": "Village khajurka", "lat": 28.1487362, "lng": 77.3320262}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Sevli", "address": "Village sevli", "lat": 28.152562, "lng": 77.339295}, {"circle": "Palwal", "district": "Palwal", "type": "Private Warehouse", "name": "Khajurka", "address": "Village khajurka", "lat": 28.1487362, "lng": 77.3320262}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Sevli", "address": "Village sevli", "lat": 28.152562, "lng": 77.339295}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Hodal-II", "address": "HSAMB Phar", "lat": 27.8942222, "lng": 77.3709444}, {"circle": "Palwal", "district": "Palwal", "type": "Private Warehouse", "name": "Banchari", "address": "Agra Road", "lat": 27.9317611, "lng": 77.3516032}, {"circle": "Palwal", "district": "Palwal", "type": "Private Warehouse", "name": "Gorouta", "address": "Village Gorouta", "lat": 28.143, "lng": 77.329}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Sevli", "address": "Village sevli", "lat": 28.152562, "lng": 77.339295}, {"circle": "Palwal", "district": "Palwal", "type": "Private Warehouse", "name": "Dakora", "address": "Banchari Khambi Road", "lat": 27.893676, "lng": 77.371196}, {"circle": "Palwal", "district": "Palwal", "type": "Private Warehouse", "name": "Gorouta", "address": "Village Gorouta", "lat": 28.143, "lng": 77.329}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Hodal-I", "address": "Agra Road Hodal", "lat": 28.038497, "lng": 77.328829}, {"circle": "Palwal", "district": "Palwal", "type": "Warehouse", "name": "Sugar fed", "address": "Near Police Line", "lat": 28.1487362, "lng": 77.3320262}, {"circle": "Palwal", "district": "Palwal", "type": "Private Warehouse", "name": "Banchari", "address": "Agra Road", "lat": 27.9317611, "lng": 77.3516032}, {"circle": "Palwal", "district": "Mewat", "type": "Warehouse", "name": "Tauru", "address": "Tauru Bhiwadi Road", "lat": 28.21173, "lng": 76.94984}, {"circle": "Palwal", "district": "Mewat", "type": "Warehouse", "name": "Nuh", "address": "Tauru Road", "lat": 28.10296, "lng": 77.00144}, {"circle": "Palwal", "district": "Mewat", "type": "Warehouse", "name": "Tauru", "address": "Tauru Bhiwadi Road", "lat": 28.21173, "lng": 76.94984}, {"circle": "Palwal", "district": "Mewat", "type": "Private Warehouse", "name": "Banchari", "address": "Agra Road", "lat": 27.9317611, "lng": 77.3516032}, {"circle": "Palwal", "district": "Mewat", "type": "Private Warehouse", "name": "Gorouta", "address": "Village Gorouta", "lat": 28.143, "lng": 77.329}, {"circle": "Palwal", "district": "Mewat", "type": "Warehouse", "name": "Sevli", "address": "Village sevli", "lat": 28.152562, "lng": 77.339295}, {"circle": "Palwal", "district": "Mewat", "type": "Warehouse", "name": "F.P. Zhirka", "address": "Pinangwan Road", "lat": 27.7873427, "lng": 76.94646329}, {"circle": "Palwal", "district": "Mewat", "type": "Warehouse", "name": "Palwal-III", "address": "Village Ratipur", "lat": 28.1174, "lng": 77.2872}, {"circle": "Palwal", "district": "Mewat", "type": "Warehouse", "name": "F.P. Zhirka", "address": "Pinangwan Road", "lat": 27.7873427, "lng": 76.94646329}, {"circle": "Palwal", "district": "Mewat", "type": "Warehouse", "name": "F.P. Zhirka", "address": "Pinangwan Road", "lat": 27.7873427, "lng": 76.94646329}, {"circle": "Panipat", "district": "Panipat", "type": "Warehouse", "name": "SWH Panipat-I", "address": "Old Industial Area, Panipat", "lat": 29.403429, "lng": 76.956621}, {"circle": "Panipat", "district": "Panipat", "type": "Warehouse", "name": "SWH Panipat-II", "address": "New Grain Market Panipat", "lat": 29.364727, "lng": 76.969415}, {"circle": "Panipat", "district": "Panipat", "type": "Warehouse", "name": "SWH Madlauda", "address": "Village Madlauda", "lat": 29.405958, "lng": 76.813902}, {"circle": "Panipat", "district": "Panipat", "type": "Warehouse", "name": "SWH Samalkha", "address": "Sita Ram Colony Samalkha", "lat": 29.232338, "lng": 77.014483}, {"circle": "Panipat", "district": "Panipat", "type": "Warehouse", "name": "SWH Israna", "address": "Near Government collage Israna", "lat": 29.278418, "lng": 76.840573}, {"circle": "Panipat", "district": "Panipat", "type": "Warehouse", "name": "SWH Chhichhrana", "address": "Village Chhichrana", "lat": 29.303178, "lng": 76.695038}, {"circle": "Panipat", "district": "Panipat", "type": "Warehouse", "name": "SWH Bapoli", "address": "Village Bapoli", "lat": 29.344211, "lng": 77.082343}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Gharaunda-I", "address": "NH-44 GT Road, Near Librty Gharaunda", "lat": 29.550828, "lng": 76.973626}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Gharaunda-II", "address": "New Grain Market Gharaunda", "lat": 29.543402, "lng": 76.967363}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Jundla", "address": "Village Jundla", "lat": 29.652378, "lng": 76.876302}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Taraori", "address": "Chaudhary lakhpat Rai Colony Taraori", "lat": 29.79534, "lng": 76.92804}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Nigdhu", "address": "New Grain Market Nigdhu", "lat": 29.841676, "lng": 76.72937}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Gheer", "address": "Vlliage Gheer", "lat": 29.778927, "lng": 77.110233}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Salwan", "address": "Village Salwan", "lat": 29.504894, "lng": 76.709559}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Nissing", "address": "Sambli Road, Nissing", "lat": 29.701072, "lng": 76.771101}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Barsat", "address": "Village Barsat", "lat": 29.50552, "lng": 77.045113}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Indri", "address": "New Grain Market Indri", "lat": 29.872339, "lng": 77.046472}, {"circle": "Panipat", "district": "Karnal", "type": "Warehouse", "name": "SWH Sugarfed Karnal", "address": "Near Sugar Rice Mill, Merut Road Karnal", "lat": 29.663324, "lng": 77.021338}, {"circle": "Rewari", "district": "Gurugram", "type": "Warehouse", "name": "SWH, Pataudi-I", "address": "Near Shriram Chowk, Pataudi", "lat": 28.3454, "lng": 76.76206}, {"circle": "Rewari", "district": "Gurugram", "type": "Warehouse", "name": "SWH, Pataudi-II", "address": "New Anaj Mandi, Haily Mandi", "lat": 28.2024, "lng": 76.4538}, {"circle": "Rewari", "district": "Gurugram", "type": "Warehouse", "name": "SWH, Siwari", "address": "State Warehouse, Siwari, Gurugram", "lat": 28.47255, "lng": 76.73085}, {"circle": "Rewari", "district": "Gurugram", "type": "Warehouse", "name": "SWH, Farukh Nagar", "address": "Near new Anaj Mandi, Farukh Nagar", "lat": 28.44671, "lng": 76.83636}, {"circle": "Rewari", "district": "Gurugram", "type": "Warehouse", "name": "Sidharth Godown", "address": "Sidharth Godown ,fazilpur Badli", "lat": 28.406218, "lng": 76.828824}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "SWH-Ateli", "address": "Narnaul road, Near Govt College, Ateli", "lat": 28.10666, "lng": 76.25877}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "SWH-Narnaul", "address": "Near Girl PG college, Narnaul", "lat": 28.04032, "lng": 76.11405}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "SWH-Nangal Choudhary", "address": "Near Girl college, N/choudhary", "lat": 27.8846, "lng": 76.11643}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "SWH-Mohindergarh", "address": "(SDM office road, karamchari colony, M/garh", "lat": 28.27957, "lng": 76.15036}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "SWH-Kanina", "address": "Near Railway Station, Kanina", "lat": 28.32331, "lng": 76.29717}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "Amana Kanta", "address": "Tajipur Mod Nangal Choudhary Road Narnaul", "lat": 28.011369, "lng": 76.104616}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "VIKASH AGGARWAL", "address": "Nangal choudhary Road Narnaul", "lat": 28.013981, "lng": 76.106294}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "DEVKI NANDAN HARISH KUMAR", "address": "Behror Road ,Kojinda Narnaul", "lat": 28.032231, "lng": 76.125373}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "JITESH KUMAR AGARWAL", "address": "Nijampur Raod J , Narnaul", "lat": 28.037417, "lng": 76.09074}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "Yaduwanshi Amarpur Jorashi", "address": "Nijampur Raod Jorashi , Narnaul", "lat": 28.205097, "lng": 76.19913}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "Sanghi Truck", "address": "Nangal choudhary Road Narnaul", "lat": 28.000827, "lng": 76.124976}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "MOHIT MITTAL", "address": "Behror Road , Narnaul", "lat": 28.033784, "lng": 76.118722}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "Sunil Goyal", "address": "Near Daya Sarpanch Kanta Nangal choudhary Road Narnaul", "lat": 28.014081, "lng": 76.106651}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "GUPTA Warehouse", "address": "Near new Chelawas mandi kanina", "lat": 28.32178, "lng": 76.29554}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "Mamta Godown", "address": "Nangal choudhary Road Narnaul", "lat": 28.014376, "lng": 76.106333}, {"circle": "Rewari", "district": "M/Garh", "type": "Warehouse", "name": "Preti Godwon", "address": "Bhojawas Raod, Mori", "lat": 28.230702, "lng": 76.328089}, {"circle": "Rewari", "district": "Rewari", "type": "Warehouse", "name": "SWH, Rewari-I", "address": "CompanyBagh, Rewari,Haryana", "lat": 28.19128, "lng": 76.60965}, {"circle": "Rewari", "district": "Rewari", "type": "Warehouse", "name": "SWH, Rewari-II", "address": "New anajmandi, Rewari", "lat": 28.18429, "lng": 76.60764}, {"circle": "Rewari", "district": "Rewari", "type": "Warehouse", "name": "SWH, Rampura", "address": "Near HP Petrol Pump,Rampura,Haryana", "lat": 28.19341, "lng": 76.58481}, {"circle": "Rewari", "district": "Rewari", "type": "Warehouse", "name": "SWH, Bawal", "address": "Near Anaj Mandi, Bawal", "lat": 28.07672, "lng": 76.57785}, {"circle": "Rewari", "district": "Rewari", "type": "Warehouse", "name": "VAANYA INDUSTRIES", "address": "Village ,Garhi The Nahar District Rewari", "lat": 28.244, "lng": 76.19168}, {"circle": "Rewari", "district": "Rewari", "type": "Warehouse", "name": "AVI Infrastructure", "address": "Village Khuspura , Teh Kosli Rewari", "lat": 28.19421, "lng": 76.27114}, {"circle": "Rewari", "district": "Rewari", "type": "Warehouse", "name": "AJIT SINGH", "address": "NRP Bass Road Dharuhera, Rewari", "lat": 28.182312, "lng": 76.790321}, {"circle": "Rewari", "district": "Rewari", "type": "Warehouse", "name": "LALITA DEVI W/O MUKESH KUMAR, MADAN MOHAN AGGARWAL STAFF(under Rampura)", "address": "Village Bandor Nangli Godha Rewari", "lat": 28.160974, "lng": 76.540829}, {"circle": "Rewari", "district": "Rewari", "type": "Warehouse", "name": "BMR", "address": "Narnaul road,  Vill. Tint Khori Rewari", "lat": 28.186821, "lng": 76.497379}, {"circle": "Rohtak", "district": "Rohtak", "type": "Warehouse", "name": "Meham", "address": "Near Tehsil, Meham", "lat": 28.961069, "lng": 76.310838}, {"circle": "Rohtak", "district": "Rohtak", "type": "Warehouse", "name": "Gugaheri", "address": "VPO Gugaheri", "lat": 29.046321, "lng": 76.402539}, {"circle": "Rohtak", "district": "Rohtak", "type": "Warehouse", "name": "Nayabans (Old)", "address": "VPO Nayabans", "lat": 28.798142, "lng": 76.796336}, {"circle": "Rohtak", "district": "Rohtak", "type": "Warehouse", "name": "Nayabans (New)", "address": "VPO Nayabans", "lat": 28.800366, "lng": 76.799415}, {"circle": "Rohtak", "district": "Rohtak", "type": "Warehouse", "name": "Rohtak", "address": "New Rajendra Colony, Near Old Sugar Mill, Bhiwani Chungi", "lat": 28.889053, "lng": 76.56334}, {"circle": "Rohtak", "district": "Rohtak", "type": "Warehouse", "name": "L.Majra", "address": "Opposite Girls College, L.Majra", "lat": 29.04855, "lng": 76.482612}, {"circle": "Rohtak", "district": "Sonipat", "type": "Warehouse", "name": "Sonipat", "address": "Near Sugar mill Road, Hanuman Nagar,Sonipat", "lat": 29.017484, "lng": 77.015094}, {"circle": "Rohtak", "district": "Sonipat", "type": "Warehouse", "name": "Gohana", "address": "Baroda Road, Near Mor Chowk, Gohana", "lat": 29.137143, "lng": 76.68169}, {"circle": "Rohtak", "district": "Sonipat", "type": "Warehouse", "name": "Pugthala", "address": "Pugthala Road, Bajana Khurd", "lat": 29.1897, "lng": 76.87454}, {"circle": "Rohtak", "district": "Jhajjar", "type": "Warehouse", "name": "Jhajjar", "address": "Near Tehsil,Jhajjar", "lat": 28.596615, "lng": 76.665223}, {"circle": "Rohtak", "district": "Jhajjar", "type": "Warehouse", "name": "Bhaproda godown", "address": "VPO Bhaproda District Jhajjar", "lat": 28.7496778, "lng": 76.7464215}];
-        const grid = document.getElementById('cardGrid');
+        const locations = [{"circle": "Ambala", "district": "Ambala", "type": "Warehouse", "name": "Ambala City", "address": "Near Manji shahib Gurudwara, Ambala City", "lat": 30.37818, "lng": 76.776695},
+<!-- ... existing code ... -->
+        {"circle": "Rohtak", "district": "Jhajjar", "type": "Warehouse", "name": "Bhaproda godown", "address": "VPO Bhaproda District Jhajjar", "lat": 28.7496778, "lng": 76.7464215}];
+        
+        const tableBody = document.getElementById('tableBody');
+        const dataTable = document.getElementById('dataTable');
+        const noResults = document.getElementById('noResults');
         const searchInput = document.getElementById('searchInput');
         const stats = document.getElementById('stats');
 
-        function renderCards(data) {
-            grid.innerHTML = '';
+        function renderTable(data) {
+            tableBody.innerHTML = '';
             
             if (data.length === 0) {
-                grid.innerHTML = '<div class="no-results">No locations found matching your search.</div>';
+                dataTable.style.display = 'none';
+                noResults.style.display = 'block';
                 stats.innerText = `Showing 0 of ${locations.length} locations`;
                 return;
             }
 
+            dataTable.style.display = 'table';
+            noResults.style.display = 'none';
             stats.innerText = `Showing ${data.length} of ${locations.length} locations`;
 
             data.forEach(loc => {
-                const card = document.createElement('div');
-                card.className = 'card';
+                const tr = document.createElement('tr');
                 
                 const addressStr = loc.address ? loc.address : 'Address not specified';
                 
-                card.innerHTML = `
-                    <div class="card-header">
-                        <div>
-                            <div class="location-name">${loc.name}</div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted);">${loc.type}</div>
-                        </div>
+                tr.innerHTML = `
+                    <td>
+                        <div class="location-name">${loc.name}</div>
+                        <span class="meta-text">${loc.type}</span>
+                    </td>
+                    <td>
                         <span class="badge">${loc.district}</span>
-                    </div>
-                    
-                    <div class="info-row">
-                        <div class="info-label">Circle:</div>
-                        <div class="info-value">${loc.circle}</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Address:</div>
-                        <div class="info-value">${addressStr}</div>
-                    </div>
-                    
-                    <div class="spacer"></div>
-                    
-                    <button class="nav-btn" onclick="openMaps(${loc.lat}, ${loc.lng})">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                        </svg>
-                        Navigate
-                    </button>
+                        <span class="meta-text">Circle: ${loc.circle}</span>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.9rem;">${addressStr}</div>
+                    </td>
+                    <td>
+                        <button class="nav-btn" onclick="openMaps(${loc.lat}, ${loc.lng})">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                            </svg>
+                            Navigate
+                        </button>
+                    </td>
                 `;
-                grid.appendChild(card);
+                tableBody.appendChild(tr);
             });
         }
 
@@ -265,21 +257,15 @@
                 loc.circle.toLowerCase().includes(term) ||
                 loc.address.toLowerCase().includes(term)
             );
-            renderCards(filtered);
+            renderTable(filtered);
         });
 
         window.openMaps = function(lat, lng) {
-            if (!lat || !lng || (lat === 0 && lng === 0)) {
-                alert("Coordinates not available for this location.");
-                return;
-            }
-            // Standard formatting as requested
-            const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-            window.open(url, '_blank');
+<!-- ... existing code ... -->
         };
 
         // Initial render
-        renderCards(locations);
+        renderTable(locations);
     </script>
 </body>
 </html>
